@@ -1,28 +1,36 @@
 ﻿using System;
+using System.Linq;
+using CryptSharp.Utility;
 
 namespace MoneyDashboard
 {
     public class UserRegistration
     {
-        private string email;
-        private string password;
+        private string _email;
+        private byte[] _password;
 
         protected UserRegistration() { }
 
         public UserRegistration(string email, string password)
         {
-            this.email = email;
-            this.password = password;
-            this.Id = Guid.NewGuid();
+            Id = Guid.NewGuid();
+            _email = email;
+            _password = Hash(password);
         }
 
         public Guid Id { get; protected set; }
-        public string Email { get { return email; } }
-        public string Password { get { return password; } }
+        public string Email { get { return _email; } }
+        public byte[] Password { get { return _password; } }
 
         public bool PasswordMatches(string pass)
         {
-            return string.Equals(pass, password, StringComparison.InvariantCulture);
+            return _password.SequenceEqual(Hash(pass));
+        }
+
+        private byte[] Hash(string password)
+        {
+            var input = System.Text.Encoding.UTF8.GetBytes(password);
+            return BlowfishCipher.BCrypt(input, Id.ToByteArray(), 10);
         }
     }
 }

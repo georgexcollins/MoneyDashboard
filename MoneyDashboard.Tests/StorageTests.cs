@@ -50,7 +50,7 @@ namespace MoneyDashboard.Tests
             var stored = store.Users.FirstOrDefault(x => x.Id == reg.Id);
 
             Assert.NotNull(stored);
-            Assert.NotEqual("password", stored.Password);
+            Assert.False(Encoding.UTF8.GetBytes("password").SequenceEqual(stored.Password));
         }
     }
 }
