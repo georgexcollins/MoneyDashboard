@@ -67,5 +67,36 @@ namespace MoneyDashboard.Tests
             store.VerifyAll();
             Assert.Equal(reg.Id, result);
         }
+
+        [Fact]
+        public void Login_fails_with_wrong_password()
+        {
+            var reg = new UserRegistration("me@gmail.com", "password");
+            var store = new Mock<IUserRegistrationStore>();
+            store.Setup(x => x.Load("me@gmail.com")).Returns(reg);
+            var svc = new UserRegistrationService(store.Object);
+
+            var result = svc.Login("me@gmail.com", "wrong");
+
+            store.VerifyAll();
+            Assert.NotEqual(reg.Id, result);
+            Assert.Equal(new Guid(), result);
+        }
+
+
+        [Fact]
+        public void Login_fails_with_wrong_email()
+        {
+            var reg = new UserRegistration("me@gmail.com", "password");
+            var store = new Mock<IUserRegistrationStore>();
+            store.Setup(x => x.Load("other@gmail.com"));
+            var svc = new UserRegistrationService(store.Object);
+
+            var result = svc.Login("other@gmail.com", "password");
+
+            store.VerifyAll();
+            Assert.NotEqual(reg.Id, result);
+            Assert.Equal(new Guid(), result);
+        }
     }
 }

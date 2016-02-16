@@ -24,9 +24,13 @@ namespace MoneyDashboard
             return;
         }
 
+        // Guid.Empty denotes failed login
         public Guid Login(string email, string password)
         {
-            return new Guid();
+            var user = _store.Load(email);
+            return (user != null && user.PasswordMatches(password))
+                ? user.Id
+                : new Guid();
         }
     }
 }
