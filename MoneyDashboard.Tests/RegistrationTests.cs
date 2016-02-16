@@ -34,5 +34,23 @@ namespace MoneyDashboard.Tests
 
             store.VerifyAll();
         }
+
+        [Fact]
+        public void Fails_with_empty_inputs()
+        {
+            var store = new Mock<IUserRegistrationStore>();
+            var svc = new UserRegistrationService(store.Object);
+
+            Assert.Throws<ArgumentNullException>(() => svc.Register(null, "password"));
+            Assert.Throws<ArgumentNullException>(() => svc.Register("email", null));
+        }
+
+        [Fact]
+        public void Can_check_password()
+        {
+            var reg = new UserRegistration("me@gmail.com", "password");
+
+            Assert.True(reg.PasswordMatches("password"));
+        }
     }
 }

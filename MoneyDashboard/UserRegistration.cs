@@ -18,5 +18,11 @@ namespace MoneyDashboard
 
         public Guid Id { get; protected set; }
         public string Email { get { return email; } }
+        public string Password { get { return password; } }
+
+        public bool PasswordMatches(string pass)
+        {
+            return string.Equals(pass, password, StringComparison.InvariantCulture);
+        }
     }
 }

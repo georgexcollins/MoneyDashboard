@@ -16,6 +16,9 @@ namespace MoneyDashboard
 
         public void Register(string email, string password)
         {
+            if (string.IsNullOrWhiteSpace(email)) throw new ArgumentNullException("email");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException("password");
+
             var newReg =  new UserRegistration(email, password);
             _store.Save(newReg);
             return;
