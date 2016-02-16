@@ -51,6 +51,21 @@ namespace MoneyDashboard.Tests
             var reg = new UserRegistration("me@gmail.com", "password");
 
             Assert.True(reg.PasswordMatches("password"));
+            Assert.False(reg.PasswordMatches("wrong"));
+        }
+
+        [Fact]
+        public void Service_can_verify_credentials()
+        {
+            var reg = new UserRegistration("me@gmail.com", "password");
+            var store = new Mock<IUserRegistrationStore>();
+            store.Setup(x => x.Load("me@gmail.com")).Returns(reg);
+            var svc = new UserRegistrationService(store.Object);
+
+            var result = svc.Login("me@gmail.com", "password");
+
+            store.VerifyAll();
+            Assert.Equal(reg.Id, result);
         }
     }
 }

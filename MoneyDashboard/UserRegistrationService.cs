@@ -23,5 +23,10 @@ namespace MoneyDashboard
             _store.Save(newReg);
             return;
         }
+
+        public Guid Login(string email, string password)
+        {
+            return new Guid();
+        }
     }
 }
