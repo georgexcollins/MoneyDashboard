@@ -98,5 +98,16 @@ namespace MoneyDashboard.Tests
             Assert.NotEqual(reg.Id, result);
             Assert.Equal(new Guid(), result);
         }
+
+
+        [Fact]
+        public void Login_fails_with_empty_inputs()
+        {
+            var store = new Mock<IUserRegistrationStore>();
+            var svc = new UserRegistrationService(store.Object);
+
+            Assert.Throws<ArgumentNullException>(() => svc.Login("me@gmail.com", null));
+            Assert.Throws<ArgumentNullException>(() => svc.Login(null, "password"));
+        }
     }
 }

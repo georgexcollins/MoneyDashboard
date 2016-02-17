@@ -1,30 +1,29 @@
 ﻿using System;
 using System.Linq;
 using CryptSharp.Utility;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoneyDashboard
 {
     public class UserRegistration
     {
-        private string _email;
-        private byte[] _password;
-
         protected UserRegistration() { }
 
         public UserRegistration(string email, string password)
         {
             Id = Guid.NewGuid();
-            _email = email;
-            _password = Hash(password);
+            Email = email;
+            Password = Hash(password);
         }
 
         public Guid Id { get; protected set; }
-        public string Email { get { return _email; } }
-        public byte[] Password { get { return _password; } }
+        [Index(IsUnique = true)]
+        public string Email { get; protected set; }
+        public byte[] Password { get; protected set; }
 
         public bool PasswordMatches(string pass)
         {
-            return _password.SequenceEqual(Hash(pass));
+            return Password.SequenceEqual(Hash(pass));
         }
 
         private byte[] Hash(string password)

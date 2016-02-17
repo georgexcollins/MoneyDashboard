@@ -11,6 +11,7 @@ namespace MoneyDashboard
         private readonly IUserRegistrationStore _store;
         public UserRegistrationService(IUserRegistrationStore store)
         {
+            if (store == null) throw new ArgumentNullException("store");
             _store = store;
         }
 
@@ -21,12 +22,14 @@ namespace MoneyDashboard
 
             var newReg =  new UserRegistration(email, password);
             _store.Save(newReg);
-            return;
         }
 
         // Guid.Empty denotes failed login
         public Guid Login(string email, string password)
         {
+            if (string.IsNullOrWhiteSpace(email)) throw new ArgumentNullException("email");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentNullException("password");
+
             var user = _store.Load(email);
             return (user != null && user.PasswordMatches(password))
                 ? user.Id
